@@ -1,0 +1,311 @@
+import discord
+import asyncio
+import random
+from discord.ext.commands import Bot
+from discord.ext import commands
+from discord.ext.commands import Bot
+from discord.ext import commands
+import json
+import random
+import sys
+import datetime
+import string
+import urllib
+import requests
+import subprocess
+import random
+import urllib.request
+import json
+import datetime
+import requests
+
+stats = True
+teamAng = 0
+teamDev = 0
+angelMembers = []
+demonMembers = []
+
+Client = discord.Client()
+bot_prefix= "-"
+client = commands.Bot(command_prefix=bot_prefix)
+
+@client.event
+async def on_ready():
+    print("Bot Online!")
+    print("Name: {}".format(client.user.name))
+    print("ID: {}".format(client.user.id))
+    await client.change_presence(game=discord.Game(name='- is the prefix | -cmds for commands!'))
+    print("------------------------------------")
+
+@client.command(pass_context=True)
+async def pm(ctx, phrase: str, user: discord.User):
+    if ctx.message.channel.id != '81384788765712384':
+        if str(ctx.message.author.id) == ownerId:
+            await bot.send_message(user, phrase)
+
+
+@client.command(pass_context = True)
+async def banlist(ctx):
+    x = '\n'.join([y.name for y in x])
+    embed = discord.Embed(title = "List of Banned Members", description = x, color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+@client.command(aliases=['hban'], pass_context=True)     
+async def hackban(self, ctx, userid: int):
+        """Bans a user outside of the server."""
+        author = ctx.message.author
+        guild = author.guild
+
+        user = guild.get_member(user_id)
+        if user is not None:
+            return await ctx.invoke(self.ban, user=user)
+
+        try:
+            await self.bot.http.ban(user_id, guild.id, 0)
+            await ctx.message.edit(content=self.bot.bot_prefix + 'Banned user: %s' % user_id)
+        except discord.NotFound:
+            await ctx.message.edit(content=self.bot.bot_prefix + 'Could not find user. '
+                               'Invalid user ID was provided.')
+        except discord.errors.Forbidden:
+            await ctx.message.edit(content=self.bot.bot_prefix + 'Could not ban user. Not enough permissions.')
+
+
+@client.command(pass_context = True)
+async def hello(ctx):
+    embed = discord.Embed(title = "Kwebot", description= """
+ Hello!"""
+                          , color = 0xFFFFF)
+    return await ctx.send(embed = embed)
+
+
+@client.command(pass_context = True)
+async def info(ctx):
+    embed = discord.Embed(title = "Kwebot", description= """
+ Hello My name is Kwebot, I am a moderation bot, My owner is <@164524112037937153> He is really cool, He is my creator,Owner, And my friend, Im currenty being developed, Im written in python."""
+                          , color = 0xFFFFF)
+    return await ctx.send(embed = embed)    
+
+
+
+@client.command(pass_context = True)
+async def clear(ctx, messages):
+    try:
+        totalMess = int(messages)
+    except Exception:
+        await ctx.send("That's not a number!")
+        return
+    counter = 0
+    while totalMess > 0:
+        gotMessage = False
+        if totalMess > 100:
+            tempNum = 100
+        else:
+            tempNum = totalMess
+        try:
+            async for message in ctx.channel.history(limit=tempNum):
+                await message.delete()
+                gotMessage = True
+                counter += 1
+                totalMess -= 1
+        except Exception:
+            pass
+        if not gotMessage:
+            # No more messages - exit
+            break
+    await ctx.channel.send("Deleted *{} message(s)!*".format(counter))
+
+
+
+
+@client.command(pass_context=True)
+async def date(ctx):
+    today = datetime.date.today()
+    todaysdate = today.strftime('%A, %b %Y (%d-%m-%Y)')
+    await ctx.channel.send("Today's date is: {}".format(todaysdate))
+
+@client.command(pass_context = True)
+@commands.has_permissions(ban_members = True)
+async def ban(ctx, user : discord.Member):
+   
+    author = ctx.message.author
+    server = author.server
+ 
+    await bot.ban(user)
+    embed=discird.Embed(title="Successfully banned the user.", color=0x0f8a6e)
+    await ctx.send(embed=embed)
+ 
+    if not is_not_allowed_by_hierarchy(server, author, user):
+        embed=discord.Embed(title="You cannot ban this user because you rank below them.", color=0x0f8a6e)
+        await ctx.send(embed=embed)
+ 
+@ban.error
+async def ban_error(error, ctx):
+    if isinstance(error, discord.ext.commands.errors.CheckFailure):
+        embed=discord.Embed(title="You do not have permission to use this command.", color=0x0f8a6e)
+        await ctx.send(embed=embed)
+
+
+@client.command(pass_context = True)
+async def kick(ctx, *, member : discord.Member = None):
+    if not ctx.message.author.server_permissions.administrator:
+        return
+ 
+    if not member:
+        return await ctx.send(ctx.message.author.mention + "Specify a user to kick!")
+    try:
+        await client.kick(member)
+    except Exception as e:
+        if 'Privilege is too low' in str(e):
+            embed = discord.Embed(description = "Privilege is too low. :x:", color = 0xF00000)
+            return await ctx.send(embed = embed)
+
+@client.command(pass_context=True)
+async def define(ctx, *, word : str = None):
+        url = "http://api.urbandictionary.com/v0/define?term={}".format(urllib.parse.quote(word))
+        r = requests.get(url, headers = {'User-agent': "spoopys Bot"})
+        theJSON = r.json()["list"]
+        msg = "I couldn't find a definition for: **{}**".format(word)
+        if len(theJSON):
+            # Got it - let's build our response
+            ourWord = theJSON[0]
+            msg = '__**{}:**__\n\n{}'.format(string.capwords(ourWord["word"]), ourWord["definition"])
+        await ctx.send(msg)
+        
+@client.command(pass_context=True)
+async def define2(ctx, *, word : str = None):
+        url = "http://www.dictionary.com/browse/d?s={}".format(urllib.parse.quote(word))
+        r = requests.get(url, headers = {'User-agent': "spoopys Bot"})
+        theJSON = r.json()["list"]
+        msg = "I couldn't find a definition for: **{}**".format(word)
+        if len(theJSON):
+            # Got it - let's build our response
+            ourWord = theJSON[0]
+            msg = '__**{}:**__\n\n{}'.format(string.capwords(ourWord["word"]), ourWord["definition"])
+        await ctx.send(msg)
+        
+@client.command(pass_context=True)
+async def insult(ctx, user: discord.Member = None):
+    url = urllib.request.urlopen("http://www.insultgenerator.org/")
+    soup = BeautifulSoup(url.read().decode(), 'html.parser')
+    for node in soup.findAll("div", { "class" : "wrap" }):
+        if user is None:
+            thing = ''.join(node.findAll(text=True)).replace('\n', '').replace('\r', '')
+            await ctx.send(thing)
+        else:
+            thing = ''.join(node.findAll(text=True)).replace('\n', '').replace('\r', '')
+            await ctx.send(user.mention + " " + thing)        
+ 
+#reboot
+@client.command(pass_context=True)
+async def reboot(ctx):
+    reboot = True
+    if reboot == True:
+        print("Rebooting...")
+        subprocess.Popen(['python3', sys.argv[0]])
+        exit(0)
+
+@client.command(pass_context=True)
+async def invite(ctx):
+    embed = discord.Embed(title = "Invite", description= """
+Here is my invite, If your on mobile do -minvite https://discordapp.com/oauth2/authorize?client_id=388066248686043147&scope=bot&permissions=268435646"""
+                          , color = 0xFFFFF)
+    return await ctx.send(embed = embed)
+
+
+@client.command(pass_context=True)
+async def minvite(ctx):
+    await ctx.send("https://discordapp.com/oauth2/authorize?client_id=388066248686043147&scope=bot&permissions=268435646")
+
+
+@client.command(pass_context=True)
+async def cmds(ctx):
+    embed = discord.Embed(title = "Command list", description= """
+banlist: Lists banned members
+hackban: WIP
+hello: Says hello
+info: Gives a little information on the bot
+clear (messages): clears messages you want to clear min is 2
+ban (user): bans a user from the server
+kick (user): kicks a user from the server
+define (word): Defines a word
+insult user: WIP
+invite: give's an invite to invite the bot!
+minvite: give's an invite to invite the bot not in embed
+plug: Plugs the owners YT and there Discord server! Use it!
+kayla: Plugs the One of the Co Owner's YT and there Discord server! Use it!
+hey: says hello in a cooler way
+date: tells you the date!"""
+                          , color = 0xFFFFF)
+    return await ctx.send(embed = embed)
+    
+@client.command(pass_context=True)
+async def plug(ctx):
+    embed = discord.Embed(title = "Plug", description= """
+<@164524112037937153>'s channel is https://www.youtube.com/channel/UChUgFWuDWQq_j8dPtazXLNw
+<@164524112037937153>'s Discord server is https://discord.gg/NRFtpbj """
+                         , color = 0xFFFFF)
+    return await ctx.send(embed = embed)
+
+@client.command(pass_context=True)
+async def kayla(ctx):
+    embed = discord.Embed(title = "Plug", description= """
+<@356169087623233557>'s https://www.youtube.com/channel/UCxoQvlpvLe1qV82sS1tV66gj8dPtazXLNw
+<@356169087623233557>'s Discord server is https://discord.gg/876Zner """
+                         , color = 0xFFFFF)
+    return await ctx.send(embed = embed)
+
+@client.command(pass_context=True)
+async def lol(ctx):
+    embed = discord.Embed(title = "lolz", description= """
+Now this is a story all about how
+My life got flipped turned upside down
+And I'd like to take a minute, just sit right there
+I'll tell you how I became the prince of a town called Bel-Air
+
+In West Philadelphia, born and raised
+On the playground is where I spent most of my days
+Chillin' out, maxin', relaxin' all cool
+And all shootin' some b-ball outside of the school
+When a couple of guys who were up to no good
+Started makin' trouble in my neighborhood
+I got in one little fight and my mom got scared
+And said "You're movin' with your auntie and uncle in Bel-Air"
+
+I begged and pleaded with her day after day
+But she packed my suitcase and sent me on my way
+She gave me a kiss and then she gave me my ticket
+I put my Walkman on and said "I might as well kick it"
+First class, yo, this is bad
+Drinkin' orange juice out of a champagne glass
+Is this what the people of Bel-Air livin' like?
+Hmmm, this might be all right
+But wait, I hear they're prissy, bourgeois, and all that
+Is this the type of place that they just sent this cool cat?
+I don't think so, I'll see when I get there
+I hope they're prepared for the Prince of Bel-Air
+
+Well, uh, the plane landed and when I came out
+There was a dude looked like a cop standin' there with my name out
+I ain't tryin' to get arrested yet, I just got here
+I sprang with the quickness like lightning, disappeared
+I whistled for a cab and when it came near
+The license plate said 'Fresh' and it had dice in the mirror
+If anything I could say that this cab was rare
+But I thought "Nah, forget it, yo holmes, to Bel-Air!"
+
+I pulled up to the house about 7 or 8
+And I yelled to the cabbie "Yo holmes, smell ya later"
+Looked at my kingdom, I was finally there
+To sit on my throne as the Prince of Bel-Air """
+                         , color = 0xFFFFF)
+    return await ctx.send(embed = embed)
+
+
+@client.command(pass_context=True)
+async def hey(ctx):
+    await ctx.channel.send("Hello, {}".format(ctx.author.mention))
+    author = ctx.message.author
+    print(author, "said hey!")
+
+client.run("Token")
