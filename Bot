@@ -1,4 +1,5 @@
 import discord
+from discord import client
 import asyncio
 import random
 from discord.ext.commands import Bot
@@ -18,6 +19,51 @@ import urllib.request
 import json
 import datetime
 import requests
+import os
+import sys
+import time
+import shlex
+import shutil
+import random
+import inspect
+import logging
+import asyncio
+import pathlib
+import traceback
+
+import aiohttp
+import discord
+import discord
+from discord.ext import commands
+import threading
+import os
+from random import shuffle, choice
+from urllib.parse import urlparse
+
+from json import JSONDecodeError
+import re
+import logging
+import collections
+import copy
+import asyncio
+import math
+import time
+import inspect
+import subprocess
+import urllib.parse
+from enum import Enum
+
+
+from io import BytesIO, StringIO
+from functools import wraps
+from textwrap import dedent
+from datetime import timedelta
+from collections import defaultdict
+
+from discord.enums import ChannelType
+
+
+
 
 stats = True
 teamAng = 0
@@ -25,7 +71,7 @@ teamDev = 0
 angelMembers = []
 demonMembers = []
 
-Client = discord.Client()
+client = discord.Client()
 bot_prefix= "-"
 client = commands.Bot(command_prefix=bot_prefix)
 
@@ -34,8 +80,10 @@ async def on_ready():
     print("Bot Online!")
     print("Name: {}".format(client.user.name))
     print("ID: {}".format(client.user.id))
+    await client.change_presence(game=discord.Game(name='With kayla because she is a very cool female'))
     await client.change_presence(game=discord.Game(name='- is the prefix | -cmds for commands!'))
     print("------------------------------------")
+    
 
 @client.command(pass_context=True)
 async def pm(ctx, phrase: str, user: discord.User):
@@ -51,24 +99,17 @@ async def banlist(ctx):
     return await client.say(embed = embed)
 
 
-@client.command(aliases=['hban'], pass_context=True)     
-async def hackban(self, ctx, userid: int):
-        """Bans a user outside of the server."""
-        author = ctx.message.author
-        guild = author.guild
-
-        user = guild.get_member(user_id)
-        if user is not None:
-            return await ctx.invoke(self.ban, user=user)
-
-        try:
-            await self.bot.http.ban(user_id, guild.id, 0)
-            await ctx.message.edit(content=self.bot.bot_prefix + 'Banned user: %s' % user_id)
-        except discord.NotFound:
-            await ctx.message.edit(content=self.bot.bot_prefix + 'Could not find user. '
-                               'Invalid user ID was provided.')
-        except discord.errors.Forbidden:
-            await ctx.message.edit(content=self.bot.bot_prefix + 'Could not ban user. Not enough permissions.')
+@client.command(pass_context = True)
+async def applehater(ctx):
+    embed = discord.Embed(title = "Kwebot", description= """
+If your an apple hater this will change your mind
+https://www.youtube.com/watch?v=oMN2PeFama0
+https://www.youtube.com/watch?v=UTx12y42Xv4
+https://www.youtube.com/watch?v=XB4cjbYywqg
+https://www.youtube.com/watch?v=AYshVbcEmUc
+https://www.youtube.com/watch?v=7U7Eu8u_tBw"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
 
 
 @client.command(pass_context = True)
@@ -76,7 +117,7 @@ async def hello(ctx):
     embed = discord.Embed(title = "Kwebot", description= """
  Hello!"""
                           , color = 0xFFFFF)
-    return await ctx.send(embed = embed)
+    return await client.say(embed = embed)
 
 
 @client.command(pass_context = True)
@@ -84,7 +125,7 @@ async def info(ctx):
     embed = discord.Embed(title = "Kwebot", description= """
  Hello My name is Kwebot, I am a moderation bot, My owner is <@164524112037937153> He is really cool, He is my creator,Owner, And my friend, Im currenty being developed, Im written in python."""
                           , color = 0xFFFFF)
-    return await ctx.send(embed = embed)    
+    return await client.say(embed = embed)    
 
 
 
@@ -93,7 +134,7 @@ async def clear(ctx, messages):
     try:
         totalMess = int(messages)
     except Exception:
-        await ctx.send("That's not a number!")
+        await client.say("That's not a number!")
         return
     counter = 0
     while totalMess > 0:
@@ -133,17 +174,17 @@ async def ban(ctx, user : discord.Member):
  
     await bot.ban(user)
     embed=discird.Embed(title="Successfully banned the user.", color=0x0f8a6e)
-    await ctx.send(embed=embed)
+    await client.say(embed=embed)
  
     if not is_not_allowed_by_hierarchy(server, author, user):
         embed=discord.Embed(title="You cannot ban this user because you rank below them.", color=0x0f8a6e)
-        await ctx.send(embed=embed)
+        await client.say(embed=embed)
  
 @ban.error
 async def ban_error(error, ctx):
     if isinstance(error, discord.ext.commands.errors.CheckFailure):
         embed=discord.Embed(title="You do not have permission to use this command.", color=0x0f8a6e)
-        await ctx.send(embed=embed)
+        await client.say(embed=embed)
 
 
 @client.command(pass_context = True)
@@ -152,13 +193,14 @@ async def kick(ctx, *, member : discord.Member = None):
         return
  
     if not member:
-        return await ctx.send(ctx.message.author.mention + "Specify a user to kick!")
+        return await client.say(ctx.message.author.mention + "Specify a user to kick!")
     try:
         await client.kick(member)
     except Exception as e:
         if 'Privilege is too low' in str(e):
             embed = discord.Embed(description = "Privilege is too low. :x:", color = 0xF00000)
-            return await ctx.send(embed = embed)
+            return await client.say(embed = embed)
+        
 
 @client.command(pass_context=True)
 async def define(ctx, *, word : str = None):
@@ -170,7 +212,7 @@ async def define(ctx, *, word : str = None):
             # Got it - let's build our response
             ourWord = theJSON[0]
             msg = '__**{}:**__\n\n{}'.format(string.capwords(ourWord["word"]), ourWord["definition"])
-        await ctx.send(msg)
+        await client.say(msg)
         
 @client.command(pass_context=True)
 async def define2(ctx, *, word : str = None):
@@ -182,7 +224,7 @@ async def define2(ctx, *, word : str = None):
             # Got it - let's build our response
             ourWord = theJSON[0]
             msg = '__**{}:**__\n\n{}'.format(string.capwords(ourWord["word"]), ourWord["definition"])
-        await ctx.send(msg)
+        await client.say(msg)
         
 @client.command(pass_context=True)
 async def insult(ctx, user: discord.Member = None):
@@ -191,10 +233,10 @@ async def insult(ctx, user: discord.Member = None):
     for node in soup.findAll("div", { "class" : "wrap" }):
         if user is None:
             thing = ''.join(node.findAll(text=True)).replace('\n', '').replace('\r', '')
-            await ctx.send(thing)
+            await client.say(thing)
         else:
             thing = ''.join(node.findAll(text=True)).replace('\n', '').replace('\r', '')
-            await ctx.send(user.mention + " " + thing)        
+            await client.say(user.mention + " " + thing)        
  
 #reboot
 @client.command(pass_context=True)
@@ -206,54 +248,192 @@ async def reboot(ctx):
         exit(0)
 
 @client.command(pass_context=True)
-async def invite(ctx):
-    embed = discord.Embed(title = "Invite", description= """
-Here is my invite, If your on mobile do -minvite https://discordapp.com/oauth2/authorize?client_id=388066248686043147&scope=bot&permissions=268435646"""
+async def suggest(ctx):
+    embed = discord.Embed(title = "Click here", url="https://docs.google.com/forms/u/1/d/e/1FAIpQLSecugCIex5Au1TFnhqQT9uTTBgIxlkaycA_rd06SLmYlABMZg/viewform", description= """
+Click there to make a suggestion and then follow the instructions at the end!"""
                           , color = 0xFFFFF)
-    return await ctx.send(embed = embed)
+    return await client.say(embed = embed)
 
 
 @client.command(pass_context=True)
 async def minvite(ctx):
-    await ctx.send("https://discordapp.com/oauth2/authorize?client_id=388066248686043147&scope=bot&permissions=268435646")
+    await client.say("https://discordapp.com/oauth2/authorize?client_id=388066248686043147&scope=bot&permissions=268435646")
+
+@client.command(pass_context=True)
+async def invite(ctx):
+    embed = discord.Embed(title = "Click here", url="https://discordapp.com/oauth2/authorize?client_id=388066248686043147&scope=bot&permissions=268435646", description= """
+Here is my invite, If your on mobile do -minvite"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+@client.command(pass_context=True)
+async def help2(ctx):
+    embed = discord.Embed(title = "Click here", url="https://discord.gg/Ju94YKn", description= """
+Here is an invite to a server where you can get help, test discord bots, and learn so much!!!"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+@client.command(pass_context=True)
+async def server(ctx):
+    embed = discord.Embed(title = "Click here", url="https://discord.gg/mWsauy8", description= """
+Here is an invite to my offical discord server!"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+@client.command(pass_context=True)
+async def ghost(ctx):
+    embed = discord.Embed(title = "GhostCMD",  description= """
+Ghost is a fucking alt and a fucking cunt who can't do shit in life DissTrack: https://www.youtube.com/watch?v=uA3w3WTuxqk&feature=youtu.be"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+
+@client.command(pass_context=True)
+async def wither(ctx):
+    embed = discord.Embed(title = "witherCMD",  description= """
+This fucking kid named wither thinks he is better thinking he can help but all he wants is power """
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+@client.command(pass_context=True)
+async def evioss(ctx):
+    embed = discord.Embed(title = "EviossCMD",  description= """Evioss is a fucking 12 year old kid who makes shirts with custom ink and has fucking 1500+ alts """
+                         , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+@client.command(pass_context=True)
+async def kao(ctx):
+    embed = discord.Embed(title = "KaoCMD",  description= """This man is a legend who knows everything and is a hacker becareful around him, He can track your ip :D """
+                         , color = 0xFFFFF)
+    return await client.say(embed = embed)
 
 
 @client.command(pass_context=True)
 async def cmds(ctx):
     embed = discord.Embed(title = "Command list", description= """
-banlist: Lists banned members
-hackban: WIP
-hello: Says hello
-info: Gives a little information on the bot
-clear (messages): clears messages you want to clear min is 2
-ban (user): bans a user from the server
-kick (user): kicks a user from the server
-define (word): Defines a word
-insult user: WIP
-invite: give's an invite to invite the bot!
-minvite: give's an invite to invite the bot not in embed
-plug: Plugs the owners YT and there Discord server! Use it!
-kayla: Plugs the One of the Co Owner's YT and there Discord server! Use it!
-hey: says hello in a cooler way
-date: tells you the date!"""
+
+***-modcmds***: for moderation commands
+***-fun***: for fun commands
+***-economycmds***: for economy commands
+***-ownercmds***: commands for the owner you can view them
+***-musiccmds***: commands for music"""
                           , color = 0xFFFFF)
-    return await ctx.send(embed = embed)
+    return await client.say(embed = embed)
+
+
+@client.command(pass_context=True)
+async def modcmds(ctx):
+    embed = discord.Embed(title = "Mod Command list", description= """
+
+***-kick***: Kicks a user
+***-ban***: bans a user
+***-hackban***: Bans a user outside the server supply it with a user id not user
+***-softban***: Kicks the user, deleting 1 day worth of messages. 
+***-mute***: mutes a user
+***-unmute***: unmutes a user
+***-names***: Show previous names/nicknames of a user
+***-reason***: specifys a reason for a ban in logs
+***-modset***: lets you set specific moderation things"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+@client.command(pass_context=True)
+async def ownercmds(ctx):
+    embed = discord.Embed(title = "Owner Command list", description= """
+
+***-blacklist***: Blacklist management commands
+***-cogs***: Shows loaded/unloaded cogs
+***-command***: Disables/enables commands
+***-contact***: Sends a message to the owner
+***-leave***: Leaves server
+***-load***: Loads a cog
+***-reload***: Reloads a cog
+***-restart***: Attempts to restart Bot
+***-servers***: Lists and allows to leave servers
+***-set***: Changes Bot's core settings
+***-shutdown***: Shuts downs
+***-traceback***: Sends to the owner the last command exception that has occurred
+***-unload***: Unloads a cog
+***-uptime***: Shows Red's uptime
+***-version***: Shows Red's current version
+***-whitelist***: Whitelist management commands"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+
+@client.command(pass_context=True)
+async def musiccmds(ctx):
+    embed = discord.Embed(title = "Music Command list", description= """
+
+***-play***: Plays music
+***-resume***: Resume the player
+***-skip***: Skips a song
+***-volume***: Sets the """
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
     
 @client.command(pass_context=True)
 async def plug(ctx):
     embed = discord.Embed(title = "Plug", description= """
 <@164524112037937153>'s channel is https://www.youtube.com/channel/UChUgFWuDWQq_j8dPtazXLNw
-<@164524112037937153>'s Discord server is https://discord.gg/NRFtpbj """
+<@164524112037937153>'s Discord server is https://discord.gg/Fgn3Dvx """
                          , color = 0xFFFFF)
-    return await ctx.send(embed = embed)
+    return await client.say(embed = embed)
+
+
+@client.command(pass_context=True)
+async def economycmds(ctx):
+    embed = discord.Embed(title = "Economy Command list", description= """
+
+***-bank***: Bank operations
+***-economyset***: Changes economy module settings
+***-leaderboard***: Server / global leaderboard
+***-payday***: Get some free credits
+***-payouts***: Shows slot machine payouts 
+***-slot***: Play the slot machine"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+
+@client.command(pass_context=True)
+async def fun(ctx):
+    embed = discord.Embed(title = "Fun Command list", description= """
+
+***-8***: Ask 8 ball a question
+***-choose***: Chooses between multiple choices.
+***-flip***: Flips a coin... or a user.
+***-lmgtfy***: Creates a lmgtfy link
+***-poll***: Starts/stops a poll
+***-roll***: Rolls random number (between 1 and user choice)
+***-rps***: Play rock paper scissors
+***-serverinfo***: Shows server's informations
+***-stopwatch***: Starts/stops stopwatch
+***-urban***: Urban Dictionary search
+***-userinfo***: Shows users's informations
+***invite:***: Gives you an invite for the bot
+***-minvite***: Gives you an invite if your on mobile
+***-define***: Defines a word
+***-plug***: Plugs owners stuff
+***-kayla***: Plugs a friends stuff"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
 
 @client.command(pass_context=True)
 async def kayla(ctx):
-    embed = discord.Embed(title = "Plug", description= """
-<@356169087623233557>'s https://www.youtube.com/channel/UCxoQvlpvLe1qV82sS1tV66gj8dPtazXLNw
-<@356169087623233557>'s Discord server is https://discord.gg/876Zner """
+    embed = discord.Embed(title = "Kayla", description= """
+<@289551694797340673>'s channel is https://www.youtube.com/channel/UCxoQvlpvLe1qV82sS1tV66g
+<@289551694797340673>'s Discord server is https://discord.gg/dedD4fs """
                          , color = 0xFFFFF)
-    return await ctx.send(embed = embed)
+    return await client.say(embed = embed)
 
 @client.command(pass_context=True)
 async def lol(ctx):
@@ -299,13 +479,89 @@ And I yelled to the cabbie "Yo holmes, smell ya later"
 Looked at my kingdom, I was finally there
 To sit on my throne as the Prince of Bel-Air """
                          , color = 0xFFFFF)
-    return await ctx.send(embed = embed)
+    return await client.say(embed = embed)
 
 
 @client.command(pass_context=True)
 async def hey(ctx):
-    await ctx.channel.send("Hello, {}".format(ctx.author.mention))
+    await client.channel.send("Hello, {}".format(ctx.author.mention))
     author = ctx.message.author
     print(author, "said hey!")
 
-client.run("Token")
+
+@client.command(pass_context=True)
+async def loveyou(ctx):
+    await client.say("Love you too❤, {}".format(ctx.author.mention))
+    author = ctx.message.author
+    print(author, "Loved the bot!")
+
+@client.command(no_pm=True, pass_context=True)
+async def hackban(self, ctx, user_id: int, *, reason: str = None):
+        """Preemptively bans user from the server
+
+        A user ID needs to be provided
+        If the user is present in the server a normal ban will be
+        issued instead"""
+        user_id = str(user_id)
+        author = ctx.message.author
+        server = author.server
+
+        ban_list = await self.bot.get_bans(server)
+        is_banned = discord.utils.get(ban_list, id=user_id)
+
+        if is_banned:
+            await self.bot.say("User is already banned.")
+            return
+
+        user = server.get_member(user_id)
+        if user is not None:
+            await ctx.invoke(self.ban, user=user, reason=reason)
+            return
+
+        try:
+            await self.bot.http.ban(user_id, server.id, 0)
+        except discord.NotFound:
+            await self.bot.say("User not found. Have you provided the "
+                               "correct user ID?")
+        except discord.Forbidden:
+            await self.bot.say("I lack the permissions to do this.")
+        else:
+            logger.info("{}({}) hackbanned {}"
+                        "".format(author.name, author.id, user_id))
+            user = await self.bot.get_user_info(user_id)
+            await self.new_case(server,
+                                action="HACKBAN",
+                                mod=author,
+                                user=user,
+                                reason=reason)
+            await self.bot.say("Done. The user will not be able to join this "
+                               "server.")
+
+@client.command(pass_context=True)
+async def staff(ctx):
+    embed = discord.Embed(title = "My Wonderful Staff", description= """
+<@164524112037937153> - Owner/Founder/Dev
+<@289551694797340673> - Co/And Friend
+<@298765890189787140> - Co/And Friend
+<@339924251832221696> - Just a staff/Friend
+<@264121569721319424> - Just a staff
+<@308362826060267521> - Just a staff/friend"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+
+
+@client.command(pass_context=True)
+async def credits(ctx):
+    embed = discord.Embed(title = "My credits!", description= """
+Red: An open source discord bot
+Music bot master: used for the music cmd
+Spoopy: The creator
+marianmxm: Helped me find Red"""
+                          , color = 0xFFFFF)
+    return await client.say(embed = embed)
+
+
+
+client.run("TOKEN")
