@@ -1,5 +1,4 @@
 import discord
-from discord import client
 import asyncio
 import random
 from discord.ext.commands import Bot
@@ -72,7 +71,7 @@ angelMembers = []
 demonMembers = []
 
 client = discord.Client()
-bot_prefix= "-"
+bot_prefix= "k!"
 client = commands.Bot(command_prefix=bot_prefix)
 
 @client.event
@@ -81,7 +80,7 @@ async def on_ready():
     print("Name: {}".format(client.user.name))
     print("ID: {}".format(client.user.id))
     await client.change_presence(game=discord.Game(name='With kayla because she is a very cool female'))
-    await client.change_presence(game=discord.Game(name='- is the prefix | -cmds for commands!'))
+    await client.change_presence(game=discord.Game(name='k! is the prefix | k!cmds for commands!'))
     print("------------------------------------")
     
 
@@ -301,7 +300,7 @@ This fucking kid named wither thinks he is better thinking he can help but all h
 
 @client.command(pass_context=True)
 async def evioss(ctx):
-    embed = discord.Embed(title = "EviossCMD",  description= """Evioss is a fucking 12 year old kid who makes shirts with custom ink and has fucking 1500+ alts """
+    embed = discord.Embed(title = "EviossCMD",  description= """Evioss is a cool kid, very friendly and nice, 100% be friends with this man """
                          , color = 0xFFFFF)
     return await client.say(embed = embed)
 
@@ -316,11 +315,11 @@ async def kao(ctx):
 async def cmds(ctx):
     embed = discord.Embed(title = "Command list", description= """
 
-***-modcmds***: for moderation commands
-***-fun***: for fun commands
-***-economycmds***: for economy commands
-***-ownercmds***: commands for the owner you can view them
-***-musiccmds***: commands for music"""
+***k!modcmds***: for moderation commands
+***k!fun***: for fun commands
+***k!economycmds***: for economy commands
+***k!ownercmds***: commands for the owner you can view them
+***k!musiccmds***: commands for music"""
                           , color = 0xFFFFF)
     return await client.say(embed = embed)
 
@@ -329,15 +328,15 @@ async def cmds(ctx):
 async def modcmds(ctx):
     embed = discord.Embed(title = "Mod Command list", description= """
 
-***-kick***: Kicks a user
-***-ban***: bans a user
-***-hackban***: Bans a user outside the server supply it with a user id not user
-***-softban***: Kicks the user, deleting 1 day worth of messages. 
-***-mute***: mutes a user
-***-unmute***: unmutes a user
-***-names***: Show previous names/nicknames of a user
-***-reason***: specifys a reason for a ban in logs
-***-modset***: lets you set specific moderation things"""
+***k!kick***: Kicks a user
+***k!ban***: bans a user
+***k!hackban***: Bans a user outside the server supply it with a user id not user
+***k!softban***: Kicks the user, deleting 1 day worth of messages. 
+***k!mute***: mutes a user
+***k!unmute***: unmutes a user
+***k!names***: Show previous names/nicknames of a user
+***k!reason***: specifys a reason for a ban in logs
+***k!modset***: lets you set specific moderation things"""
                           , color = 0xFFFFF)
     return await client.say(embed = embed)
 
@@ -345,22 +344,22 @@ async def modcmds(ctx):
 async def ownercmds(ctx):
     embed = discord.Embed(title = "Owner Command list", description= """
 
-***-blacklist***: Blacklist management commands
-***-cogs***: Shows loaded/unloaded cogs
-***-command***: Disables/enables commands
-***-contact***: Sends a message to the owner
-***-leave***: Leaves server
-***-load***: Loads a cog
-***-reload***: Reloads a cog
-***-restart***: Attempts to restart Bot
-***-servers***: Lists and allows to leave servers
-***-set***: Changes Bot's core settings
-***-shutdown***: Shuts downs
-***-traceback***: Sends to the owner the last command exception that has occurred
-***-unload***: Unloads a cog
-***-uptime***: Shows Red's uptime
-***-version***: Shows Red's current version
-***-whitelist***: Whitelist management commands"""
+***k!blacklist***: Blacklist management commands
+***k!cogs***: Shows loaded/unloaded cogs
+***k!command***: Disables/enables commands (For everyone)
+***k!contact***: Sends a message to the owner
+***k!leave***: Leaves server
+***k!load***: Loads a cog
+***k!reload***: Reloads a cog
+***k!restart***: Attempts to restart Bot
+***k!servers***: Lists and allows to leave servers
+***k!set***: Changes Bot's core settings
+***k!shutdown***: Shuts downs
+***k!traceback***: Sends to the owner the last command exception that has occurred
+***k!unload***: Unloads a cog
+***k!uptime***: Shows Red's uptime
+***k!version***: Shows Red's current version
+***k!whitelist***: Whitelist management commands"""
                           , color = 0xFFFFF)
     return await client.say(embed = embed)
 
@@ -370,10 +369,10 @@ async def ownercmds(ctx):
 async def musiccmds(ctx):
     embed = discord.Embed(title = "Music Command list", description= """
 
-***-play***: Plays music
-***-resume***: Resume the player
-***-skip***: Skips a song
-***-volume***: Sets the """
+***k!play***: Plays music
+***k!resume***: Resume the player
+***k!skip***: Skips a song
+***k!volume***: Sets the """
                           , color = 0xFFFFF)
     return await client.say(embed = embed)
 
@@ -391,12 +390,12 @@ async def plug(ctx):
 async def economycmds(ctx):
     embed = discord.Embed(title = "Economy Command list", description= """
 
-***-bank***: Bank operations
-***-economyset***: Changes economy module settings
-***-leaderboard***: Server / global leaderboard
-***-payday***: Get some free credits
-***-payouts***: Shows slot machine payouts 
-***-slot***: Play the slot machine"""
+***k!bank***: Bank operations
+***k!economyset***: Changes economy module settings
+***k!leaderboard***: Server / global leaderboard
+***k!payday***: Get some free credits
+***k!payouts***: Shows slot machine payouts 
+***k!slot***: Play the slot machine"""
                           , color = 0xFFFFF)
     return await client.say(embed = embed)
 
@@ -406,22 +405,22 @@ async def economycmds(ctx):
 async def fun(ctx):
     embed = discord.Embed(title = "Fun Command list", description= """
 
-***-8***: Ask 8 ball a question
-***-choose***: Chooses between multiple choices.
-***-flip***: Flips a coin... or a user.
-***-lmgtfy***: Creates a lmgtfy link
-***-poll***: Starts/stops a poll
-***-roll***: Rolls random number (between 1 and user choice)
-***-rps***: Play rock paper scissors
-***-serverinfo***: Shows server's informations
-***-stopwatch***: Starts/stops stopwatch
-***-urban***: Urban Dictionary search
-***-userinfo***: Shows users's informations
-***invite:***: Gives you an invite for the bot
-***-minvite***: Gives you an invite if your on mobile
-***-define***: Defines a word
-***-plug***: Plugs owners stuff
-***-kayla***: Plugs a friends stuff"""
+***k!8***: Ask 8 ball a question
+***k!choose***: Chooses between multiple choices.
+***k!flip***: Flips a coin... or a user.
+***k!lmgtfy***: Creates a lmgtfy link
+***k!poll***: Starts/stops a poll
+***k!roll***: Rolls random number (between 1 and user choice)
+***k!rps***: Play rock paper scissors
+***k!serverinfo***: Shows server's informations
+***k!stopwatch***: Starts/stops stopwatch
+***k!urban***: Urban Dictionary search
+***k!userinfo***: Shows users's informations
+***k!invite:***: Gives you an invite for the bot
+***k!minvite***: Gives you an invite if your on mobile
+***k!define***: Defines a word
+***k!plug***: Plugs owners stuff
+***k!kayla***: Plugs a friends stuff"""
                           , color = 0xFFFFF)
     return await client.say(embed = embed)
 
@@ -564,4 +563,4 @@ marianmxm: Helped me find Red"""
 
 
 
-client.run("TOKEN")
+client.run("Mzg4MDY2MjQ4Njg2MDQzMTQ3.DQ7rdg.XID6Qe2Ghv85-lpoYooAMF0yKuE")
